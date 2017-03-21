@@ -1,0 +1,9 @@
+---
+- name: Deploy keepalived
+  hosts: masters
+  become: yes
+  roles:
+    - keepalived
+  tags:
+    - keepalived
+

@@ -1,0 +1,7 @@
+---
+- name: Enable kubelet
+  service: name=kubelet enabled=yes
+
+- name: Start kubelet
+  service: name=kubelet state=started
+  register: kubelet_started

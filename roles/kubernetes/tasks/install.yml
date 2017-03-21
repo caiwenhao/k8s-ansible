@@ -1,0 +1,10 @@
+---
+- name: install kube rpm
+  shell: cd "{{rpm_dir}}" &&  yum localinstall *.rpm -y
+  notify:
+    - restart kubelet
+  tags:
+    - binary-update
+
+- name: Start kubelet
+  include: kubelet-start.yml

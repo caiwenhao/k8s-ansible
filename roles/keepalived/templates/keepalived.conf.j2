@@ -1,0 +1,52 @@
+global_defs {
+   router_id LVS_k8s
+}
+
+vrrp_script CheckK8sMaster {
+    script "curl -k https://{{ ansible_default_ipv4.address }}:6443"
+    interval 3
+    timeout 9
+    fall 2
+    rise 2
+}
+
+vrrp_instance VI_1 {
+{% if groups['masters'][0] == ansible_default_ipv4.address  %}
+    state MASTER
+    priority 115
+{% else %}
+    state BACKUP
+{% set i = 0 -%}
+{% for host in groups['masters'] %}
+{% set i = i + 1 -%}
+{% if host ==  ansible_default_ipv4.address %}
+    priority {{ 115-i}}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+    interface eth0
+    virtual_router_id 62
+    advert_int 1
+    mcast_src_ip {{ ansible_default_ipv4.address }}
+    nopreempt
+    authentication {
+        auth_type PASS
+        auth_pass {{auth_pass}}
+    }
+    unicast_peer {
+{% for host in groups['masters'] %}
+{% if host !=  ansible_default_ipv4.address %}
+    {{host}}
+{% endif %}
+{% endfor %}
+
+    }
+    virtual_ipaddress {
+        {{vip}}/16
+    }
+    track_script {
+        CheckK8sMaster
+    }
+
+}

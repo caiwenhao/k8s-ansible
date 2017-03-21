@@ -1,0 +1,6 @@
+- name: Write the config files for keepalived
+  template: src=keepalived.conf.j2 dest={{ keepalived_config_dir }}/keepalived.conf
+
+- name: Setting the keepalived_modified fact to true
+  set_fact:
+    keepalived_modified: true

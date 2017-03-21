@@ -1,0 +1,19 @@
+---
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/dns/ state=directory
+
+- name: DNS | Install Template from converted saltfiles
+  template:
+  args:
+    src: "dns/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/dns/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - dns-horizontal-autoscaler.yaml
+
+- name: dns | apply
+  command: "kubectl apply -f {{ kube_addons_dir }}/dns/dns-horizontal-autoscaler.yaml"
+  when: "{{ kube_master|default(false) }}"

@@ -1,0 +1,17 @@
+---
+
+- name: Install keepalived
+  include: install.yml
+  tags: install
+
+- name: Configure keepalived
+  include: configure.yml
+  tags: configure
+
+- name: Start keepalived
+  include: start.yml
+
+- name: Restart keepalived
+  include: restart.yml
+  when: keepalived_modified is not defined or (keepalived_modified is defined and keepalived_modified.changed == false)
+  tags: restart

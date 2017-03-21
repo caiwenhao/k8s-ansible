@@ -1,0 +1,17 @@
+---
+
+- name: when kube_master
+  set_fact:
+    kube_master: true
+  when: groups['masters'][0] == ansible_default_ipv4.address
+
+- name: set vip
+  command: "ip addr add {{vip}}/16 dev eth0"
+  ignore_errors: yes
+  when: "{{ kube_master|default(false) }}"
+
+- name: init kube_master
+  command: "kubeadm init --api-advertise-addresses={{vip}} --token={{kube_token}} --external-etcd-endpoints={% for node in groups['etcd'] %}http://{{ node }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+  args:
+    creates: /etc/kubernetes/touch
+  when: "{{ kube_master|default(false) }}"

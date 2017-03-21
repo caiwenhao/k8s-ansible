@@ -1,0 +1,10 @@
+---
+
+- name: download kubernetes rpm
+  include: download_rpm.yml
+
+- name: install kubernetes
+  include: install.yml
+
+- name: config dns
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf

@@ -1,0 +1,5 @@
+---
+- name:  node join
+  command: "kubeadm join --token={{kube_token}} {{vip}}"
+  args:
+    creates: /etc/kubernetes/touch

@@ -1,0 +1,27 @@
+---
+
+- name: docker pull images
+  shell: docker pull {{item}}
+  with_items: "{{kube_images}}"
+
+- name: Install kube master
+  include: install.yml
+  tags: install
+
+- name: Install rsync
+  include: rsync-install.yml
+  tags: install
+
+- name: config rsync
+  include: rsync-config.yml
+  when: "{{ kube_master|default(false) }}"
+
+- name: config rsync passwd
+  copy: src="rsyncd.pass" dest=/etc/rsyncd.pass mode=600
+  when: "{{ not kube_master|default(false) }}"
+
+- name: rsync kube-master files
+  shell: "/usr/bin/rsync -avz --password-file=/etc/rsyncd.pass rsy_user@{{groups['masters'][0]}}::kube-master /etc/kubernetes/"
+  notify:
+    - restart kubelet
+  when: "{{ not kube_master|default(false) }}"

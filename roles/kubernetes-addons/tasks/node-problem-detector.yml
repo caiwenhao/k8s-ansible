@@ -1,0 +1,38 @@
+---
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/node-problem-detector/ state=directory
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/node-problem-detector/config state=directory
+
+- name: node-problem-detector | Install Template
+  template:
+  args:
+    src: "node-problem-detector/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/node-problem-detector/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - node-problem-detector.yaml
+
+- name: node-problem-detector | Install Template
+  template:
+  args:
+    src: "node-problem-detector/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/node-problem-detector/config/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - kernel-monitor.json
+
+- name: node-problem-detector| create configmap
+  command: "kubectl create configmap node-problem-detector-config --from-file={{ kube_addons_dir }}/node-problem-detector/config/ -n kube-system"
+  ignore_errors: yes
+  when: "{{ kube_master|default(false) }}"
+
+- name: heapster | apply
+  command: "kubectl apply -f {{ kube_addons_dir }}/node-problem-detector/node-problem-detector.yaml -n kube-system"
+  when: "{{ kube_master|default(false) }}"

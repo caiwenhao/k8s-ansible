@@ -1,0 +1,30 @@
+---
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }} state=directory
+
+- name: auth registry
+  include: auth-registry.yml
+
+- name: setup canal network
+  include: canal.yml
+
+- name: setup dns
+  include: dns.yml
+
+- name: scale kube-discovery
+  include: kube-discovery.yml
+
+- name: setup heapster
+  include: heapster.yml
+
+- name: setup dashboard
+  include: dashboard.yml
+
+- name: setup node-problem-detector
+  include: node-problem-detector.yml
+
+- name: label node master
+  command: "kubectl label node {{ hostvars[item]['PS1']}}-{{item}}-22-{{ hostvars[item]['NUM'] }} kubeadm.alpha.kubernetes.io/role=master"
+  ignore_errors: yes
+  when: item != groups['masters'][0]
+  with_items: "{{groups['masters']}}"

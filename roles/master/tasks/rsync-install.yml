@@ -1,0 +1,9 @@
+---
+
+- name:
+  yum: name={{ item }} state=present
+  with_items:
+   - rsync
+  tags: rsync
+
+

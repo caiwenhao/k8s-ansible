@@ -1,0 +1,7 @@
+---
+- name: Enable keepalived
+  service: name=keepalived enabled=yes
+
+- name: Start keepalived
+  service: name=keepalived state=started
+  register: keepalived_started

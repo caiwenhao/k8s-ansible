@@ -1,0 +1,24 @@
+---
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/heapster/ state=directory
+
+- name: heapster | Install Template
+  template:
+  args:
+    src: "heapster/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/heapster/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - grafana-deployment.yaml
+  - grafana-service.yaml
+  - heapster-deployment.yaml
+  - heapster-service.yaml
+  - heapster-service.yaml
+  - heapster-service.yaml
+
+- name: heapster | apply
+  command: "kubectl apply -f {{ kube_addons_dir }}/heapster/"
+  when: "{{ kube_master|default(false) }}"

@@ -1,0 +1,19 @@
+---
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/canal/ state=directory
+
+- name: canal | Install Template
+  template:
+  args:
+    src: "canal/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/canal/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - canal.yaml
+
+- name: canal | apply
+  command: "kubectl apply -f {{ kube_addons_dir }}/canal/canal.yaml"
+  when: "{{ kube_master|default(false) }}"

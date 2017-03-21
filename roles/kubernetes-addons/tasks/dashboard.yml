@@ -1,0 +1,19 @@
+---
+
+- name: Assures addons dir exists
+  file: path={{ kube_addons_dir }}/dashboard/ state=directory
+
+- name: dashboard | Install Template
+  template:
+  args:
+    src: "dashboard/{{ item }}.j2"
+    dest: "{{ kube_addons_dir }}/dashboard/{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+  - kubernetes-dashboard.yaml
+
+- name: dashboard | apply
+  command: "kubectl apply -f {{ kube_addons_dir }}/dashboard/"
+  when: "{{ kube_master|default(false) }}"

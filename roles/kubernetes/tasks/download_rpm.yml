@@ -1,0 +1,21 @@
+---
+- name: Create rpm dir
+  file: path={{ rpm_dir }} state=directory
+
+- name: Set a list of kube master binaries to download
+  set_fact:
+    kube_rpms: "{{ kube_rpms }}"
+
+- name: Download Kubernetes binaries
+  get_url:
+    url: "{{ kube_download_url_base }}/{{ item }}.rpm"
+    dest: "{{ rpm_dir }}/{{ item }}.rpm"
+    mode: 0755
+    validate_certs: False
+  environment:
+    http_proxy: "{{ http_proxy|default('') }}"
+    https_proxy: "{{ https_proxy|default('') }}"
+    no_proxy: "{{ no_proxy|default('') }}"
+  with_items:
+    - "{{ kube_rpms | default([]) }}"
+

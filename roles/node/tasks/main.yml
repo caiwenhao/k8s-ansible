@@ -1,0 +1,4 @@
+---
+- name: Install kube node
+  include: install.yml
+  tags: install

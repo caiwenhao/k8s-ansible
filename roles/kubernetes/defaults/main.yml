@@ -1,0 +1,10 @@
+rpm_dir: /data/rpm
+
+kube_rpms:
+  - kubeadm-1.6.0-0.alpha.0.2074.a092d8e0f95f52.x86_64
+  - kubectl-1.5.1-0.x86_64
+  - kubelet-1.5.1-0.x86_64
+  - kubernetes-cni-0.3.0.1-0.07a8a2.x86_64
+
+# The URL to download Kubernetes binaries from.
+kube_download_url_base: http://okxzghmxw.bkt.clouddn.com

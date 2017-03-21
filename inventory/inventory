@@ -1,0 +1,13 @@
+[masters]
+10.9.123.141 PS1=lx-k8s-master NUM=a
+10.9.137.95 PS1=lx-k8s-master NUM=b
+10.9.107.62 PS1=lx-k8s-master NUM=c
+
+[nodes]
+10.9.116.74
+10.9.96.201
+
+[etcd]
+10.9.123.141
+10.9.137.95
+10.9.107.62

@@ -1,0 +1,11 @@
+---
+
+
+- name: auth-registry | create secret
+  command: "kubectl create secret docker-registry myregistrykey --docker-server={{addons_registrys}} --docker-username={{registrys_user}} --docker-password={{registrys_passwd}} --docker-email={{registrys_email}} -n kube-system"
+  ignore_errors: yes
+  when: "{{ kube_master|default(false) }}"
+
+- name: auth-registry |
+  command: "kubectl patch serviceaccounts default -p '{\"imagePullSecrets\":[{\"name\":\"myregistrykey\"}]}' -n kube-system"
+  when: "{{ kube_master|default(false) }}"

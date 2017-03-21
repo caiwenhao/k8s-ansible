@@ -1,0 +1,6 @@
+---
+
+
+- name: scale kube-discovery |
+  command: "kubectl scale deploy/kube-discovery --replicas=3 -n kube-system"
+  when: "{{ kube_master|default(false) }}"

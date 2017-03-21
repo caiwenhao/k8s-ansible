@@ -1,0 +1,36 @@
+source_type: packageManager
+cluster_name: cluster.local
+
+insecure_registrys:
+  - "gcr.io"
+  - "10.10.185.222"
+
+kube_service_addresses: 10.254.0.0/16
+vip: "10.9.198.133"
+kube_token: 909b64.64b104e09e0b7fa2
+
+dns_nameserver:
+  - "10.9.255.1"
+  - "10.9.255.2"
+  - "114.114.114.114"
+
+
+cluster_logging: true
+cluster_monitoring: true
+kube_ui: true
+kube_dash: true
+dns_setup: true
+dns_replicas: 3
+
+# Required for CoreOS. CoreOS does not include a Python interpreter. The
+# pre-ansible role installs a python interpreter to /opt/bin/. For more
+# information see https://coreos.com/blog/managing-coreos-with-ansible.html
+#ansible_python_interpreter: "PATH=/opt/bin:$PATH python"
+
+# If you need a proxy for the docker daemon define these here
+#http_proxy: "http://proxy.example.com:3128"
+#https_proxy: "http://proxy.example.com:3128"
+#no_proxy: "127.0.0.1,localhost,docker-registry.somecorporation.com"
+#ansible_ssh_user: root
+#ansible_ssh_pass: password
+#ansible_sudo_pass: password
